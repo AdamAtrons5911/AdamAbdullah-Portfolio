@@ -69,30 +69,65 @@
             }
         });
 
-        function saveMessage(name, email, text) {
-            let messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
-            messages.push({ name, email, text, date: new Date().toLocaleString() });
-            localStorage.setItem('admin_messages', JSON.stringify(messages));
+        const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019d351e-33d2-74ef-8c59-272a06758dc6';
+
+        async function saveMessage(name, email, text) {
+            let localMessages = JSON.parse(localStorage.getItem('admin_messages')) || [];
+            const newMsg = { name, email, text, date: new Date().toLocaleString() };
+            localMessages.push(newMsg);
+            localStorage.setItem('admin_messages', JSON.stringify(localMessages));
+
+            try {
+                let response = await fetch(BLOB_URL);
+                let remoteMessages = await response.json();
+                if(!Array.isArray(remoteMessages)) remoteMessages = [];
+                remoteMessages.push(newMsg);
+                await fetch(BLOB_URL, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(remoteMessages)
+                });
+            } catch (e) {
+                console.error("Failed to sync to remote DB", e);
+            }
         }
 
-        function renderMessages() {
-            let messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
+        async function renderMessages() {
+            messagesList.innerHTML = '<p style="color: #666; text-align: center;">جاري جلب الرسائل من قاعدة البيانات العالمية...</p>';
+            let messages = [];
+            try {
+                let response = await fetch(BLOB_URL);
+                messages = await response.json();
+                if(!Array.isArray(messages)) messages = [];
+            } catch (e) {
+                console.error("Failed to load DB", e);
+                messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
+            }
+
             if (messages.length === 0) {
                 messagesList.innerHTML = '<p style="color: #666; text-align: center;">لا توجد رسائل حالياً.</p>';
                 return;
             }
             messagesList.innerHTML = messages.map(msg => 
                 '<div class="message-card">' +
-                    '<h4>' + msg.name + '</h4>' +
-                    '<div class="email">' + msg.email + ' | ' + msg.date + '</div>' +
-                    '<div class="text">' + msg.text + '</div>' +
+                    '<h4>' + (msg.name || "مجهول") + '</h4>' +
+                    '<div class="email">' + (msg.email || "") + ' | ' + (msg.date || "") + '</div>' +
+                    '<div class="text">' + (msg.text || "") + '</div>' +
                 '</div>'
             ).reverse().join('');
         }
 
-        clearMessagesBtn.addEventListener('click', () => {
-            if (confirm('هل أنت متأكد من مسح جميع الرسائل؟')) {
+        clearMessagesBtn.addEventListener('click', async () => {
+            if (confirm('هل أنت متأكد من مسح جميع الرسائل نهائياً من قاعدة البيانات للجميع؟')) {
                 localStorage.removeItem('admin_messages');
+                messagesList.innerHTML = '<p style="color: #666; text-align: center;">جاري المسح...</p>';
+                try {
+                    await fetch(BLOB_URL, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify([])
+                    });
+                } catch(e) {}
                 renderMessages();
             }
         });
