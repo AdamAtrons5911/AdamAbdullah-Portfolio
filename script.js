@@ -69,36 +69,9 @@
             }
         });
 
-        // Active blob URL — persisted in localStorage so a newly-created blob is remembered
-        const DEFAULT_BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019d4004-345b-78d1-9c96-cb9cd7c2ca61';
-        function getBlobUrl() {
-            return localStorage.getItem('blob_url') || DEFAULT_BLOB_URL;
-        }
-        function setBlobUrl(url) {
-            localStorage.setItem('blob_url', url);
-        }
-
-        // Creates a fresh blob and saves the new URL
-        async function createNewBlob(messages) {
-            const res = await fetch('https://jsonblob.com/api/jsonBlob', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(messages)
-            });
-            if (!res.ok) throw new Error('Failed to create new blob: ' + res.status);
-            const locationHeader = res.headers.get('Location');
-            if (locationHeader) {
-                // Location may be https://jsonblob.com/{id} (no /api/jsonBlob/)
-                // Always reconstruct the correct API URL from the ID
-                const blobId = locationHeader.split('/').pop();
-                const apiUrl = 'https://jsonblob.com/api/jsonBlob/' + blobId;
-                setBlobUrl(apiUrl);
-                console.log('New blob created:', apiUrl);
-            }
-        }
+        // npoint.io — CORS-friendly JSON storage that works from GitHub Pages
+        // GET to read, POST to update
+        const API_URL = 'https://api.npoint.io/f770402cb3f7ab453812';
 
         async function saveMessage(name, email, text) {
             // Always save locally first
@@ -107,34 +80,23 @@
             localMessages.push(newMsg);
             localStorage.setItem('admin_messages', JSON.stringify(localMessages));
 
-            // Sync to remote
+            // Sync to npoint.io
             try {
-                const blobUrl = getBlobUrl();
-                let getResponse = await fetch(blobUrl, {
-                    headers: { 'Accept': 'application/json' }
-                });
-
-                if (getResponse.status === 404) {
-                    // Blob was deleted — recreate it with all local messages
-                    await createNewBlob(localMessages);
-                    return;
-                }
+                // 1. Read current remote messages
+                const getResponse = await fetch(API_URL);
                 if (!getResponse.ok) throw new Error('GET failed: ' + getResponse.status);
-
                 let remoteMessages = await getResponse.json();
                 if (!Array.isArray(remoteMessages)) remoteMessages = [];
-                remoteMessages.push(newMsg);
 
-                const putResponse = await fetch(getBlobUrl(), {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
+                // 2. Append and write back (npoint uses POST to update)
+                remoteMessages.push(newMsg);
+                const postResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(remoteMessages)
                 });
-                if (!putResponse.ok) throw new Error('PUT failed: ' + putResponse.status);
-                console.log('Message synced to remote successfully.');
+                if (!postResponse.ok) throw new Error('POST failed: ' + postResponse.status);
+                console.log('Message synced to npoint.io successfully.');
             } catch (e) {
                 console.error('Failed to sync to remote DB:', e);
             }
@@ -144,21 +106,10 @@
             messagesList.innerHTML = '<p style="color: #666; text-align: center;">جاري جلب الرسائل من قاعدة البيانات العالمية...</p>';
             let messages = [];
             try {
-                const blobUrl = getBlobUrl();
-                let response = await fetch(blobUrl, {
-                    headers: { 'Accept': 'application/json' }
-                });
-
-                if (response.status === 404) {
-                    // Blob gone — fall back to local
-                    console.warn('Blob not found, using local messages.');
-                    messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
-                } else if (!response.ok) {
-                    throw new Error('GET failed: ' + response.status);
-                } else {
-                    messages = await response.json();
-                    if (!Array.isArray(messages)) messages = [];
-                }
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('GET failed: ' + response.status);
+                messages = await response.json();
+                if (!Array.isArray(messages)) messages = [];
             } catch (e) {
                 console.error('Failed to load remote DB:', e);
                 messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
@@ -182,16 +133,13 @@
                 localStorage.removeItem('admin_messages');
                 messagesList.innerHTML = '<p style="color: #666; text-align: center;">جاري المسح...</p>';
                 try {
-                    const putResponse = await fetch(getBlobUrl(), {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
+                    const postResponse = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify([])
                     });
-                    if (!putResponse.ok) console.error('Clear PUT failed:', putResponse.status);
-                } catch(e) { console.error('Clear failed:', e); }
+                    if (!postResponse.ok) console.error('Clear POST failed:', postResponse.status);
+                } catch (e) { console.error('Clear failed:', e); }
                 renderMessages();
             }
         });
@@ -205,13 +153,13 @@
             const email = document.getElementById('email').value;
             const text = document.getElementById('message').value;
             const sendMethod = document.querySelector('input[name="send_method"]:checked').value;
-            
+
             if (sendMethod === 'website') {
                 saveMessage(name, email, text);
                 alert('تم ترك الرسالة في الموقع بنجاح! ولن تصل إلى الإيميل.');
                 this.reset();
             } else {
-                // إرسال عبر البريد الإلكتروني في الخلفية باستخدام Web3Forms
+                // إرسال عبر البريد الإلكتروني باستخدام Web3Forms
                 submitBtn.innerText = 'جاري الإرسال...';
                 submitBtn.disabled = true;
 
@@ -230,10 +178,10 @@
                             subject: 'رسالة جديدة من البورتفوليو - ' + name
                         })
                     });
-                    
+
                     const result = await response.json();
                     if (response.status === 200) {
-                        saveMessage(name, email, text); // حفظها كنسخة احتياطية في الموقع
+                        saveMessage(name, email, text); // حفظ نسخة احتياطية
                         alert('تم إرسال الرسالة إلى بريدك الإلكتروني بنجاح!');
                         this.reset();
                     } else {
