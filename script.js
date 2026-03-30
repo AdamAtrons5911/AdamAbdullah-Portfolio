@@ -69,7 +69,7 @@
             }
         });
 
-        const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019d351e-33d2-74ef-8c59-272a06758dc6';
+        const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019d3fa3-c16f-789f-bea8-15f03848fa7a';
 
         async function saveMessage(name, email, text) {
             let localMessages = JSON.parse(localStorage.getItem('admin_messages')) || [];
@@ -79,6 +79,7 @@
 
             try {
                 let response = await fetch(BLOB_URL);
+                if (!response.ok) throw new Error('Network response was not ok');
                 let remoteMessages = await response.json();
                 if(!Array.isArray(remoteMessages)) remoteMessages = [];
                 remoteMessages.push(newMsg);
@@ -97,6 +98,7 @@
             let messages = [];
             try {
                 let response = await fetch(BLOB_URL);
+                if (!response.ok) throw new Error('Network response was not ok');
                 messages = await response.json();
                 if(!Array.isArray(messages)) messages = [];
             } catch (e) {
