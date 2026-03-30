@@ -69,27 +69,74 @@
             }
         });
 
-        const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019d3fa3-c16f-789f-bea8-15f03848fa7a';
+        // Active blob URL — persisted in localStorage so a newly-created blob is remembered
+        const DEFAULT_BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019d3fa3-c16f-789f-bea8-15f03848fa7a';
+        function getBlobUrl() {
+            return localStorage.getItem('blob_url') || DEFAULT_BLOB_URL;
+        }
+        function setBlobUrl(url) {
+            localStorage.setItem('blob_url', url);
+        }
+
+        // Creates a fresh blob and saves the new URL
+        async function createNewBlob(messages) {
+            const res = await fetch('https://jsonblob.com/api/jsonBlob', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(messages)
+            });
+            if (!res.ok) throw new Error('Failed to create new blob: ' + res.status);
+            const locationHeader = res.headers.get('Location');
+            if (locationHeader) {
+                // Location may be https://jsonblob.com/{id} (no /api/jsonBlob/)
+                // Always reconstruct the correct API URL from the ID
+                const blobId = locationHeader.split('/').pop();
+                const apiUrl = 'https://jsonblob.com/api/jsonBlob/' + blobId;
+                setBlobUrl(apiUrl);
+                console.log('New blob created:', apiUrl);
+            }
+        }
 
         async function saveMessage(name, email, text) {
+            // Always save locally first
             let localMessages = JSON.parse(localStorage.getItem('admin_messages')) || [];
             const newMsg = { name, email, text, date: new Date().toLocaleString() };
             localMessages.push(newMsg);
             localStorage.setItem('admin_messages', JSON.stringify(localMessages));
 
+            // Sync to remote
             try {
-                let response = await fetch(BLOB_URL);
-                if (!response.ok) throw new Error('Network response was not ok');
-                let remoteMessages = await response.json();
-                if(!Array.isArray(remoteMessages)) remoteMessages = [];
+                const blobUrl = getBlobUrl();
+                let getResponse = await fetch(blobUrl, {
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (getResponse.status === 404) {
+                    // Blob was deleted — recreate it with all local messages
+                    await createNewBlob(localMessages);
+                    return;
+                }
+                if (!getResponse.ok) throw new Error('GET failed: ' + getResponse.status);
+
+                let remoteMessages = await getResponse.json();
+                if (!Array.isArray(remoteMessages)) remoteMessages = [];
                 remoteMessages.push(newMsg);
-                await fetch(BLOB_URL, {
+
+                const putResponse = await fetch(getBlobUrl(), {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify(remoteMessages)
                 });
+                if (!putResponse.ok) throw new Error('PUT failed: ' + putResponse.status);
+                console.log('Message synced to remote successfully.');
             } catch (e) {
-                console.error("Failed to sync to remote DB", e);
+                console.error('Failed to sync to remote DB:', e);
             }
         }
 
@@ -97,12 +144,23 @@
             messagesList.innerHTML = '<p style="color: #666; text-align: center;">جاري جلب الرسائل من قاعدة البيانات العالمية...</p>';
             let messages = [];
             try {
-                let response = await fetch(BLOB_URL);
-                if (!response.ok) throw new Error('Network response was not ok');
-                messages = await response.json();
-                if(!Array.isArray(messages)) messages = [];
+                const blobUrl = getBlobUrl();
+                let response = await fetch(blobUrl, {
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.status === 404) {
+                    // Blob gone — fall back to local
+                    console.warn('Blob not found, using local messages.');
+                    messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
+                } else if (!response.ok) {
+                    throw new Error('GET failed: ' + response.status);
+                } else {
+                    messages = await response.json();
+                    if (!Array.isArray(messages)) messages = [];
+                }
             } catch (e) {
-                console.error("Failed to load DB", e);
+                console.error('Failed to load remote DB:', e);
                 messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
             }
 
@@ -110,11 +168,11 @@
                 messagesList.innerHTML = '<p style="color: #666; text-align: center;">لا توجد رسائل حالياً.</p>';
                 return;
             }
-            messagesList.innerHTML = messages.map(msg => 
+            messagesList.innerHTML = messages.map(msg =>
                 '<div class="message-card">' +
-                    '<h4>' + (msg.name || "مجهول") + '</h4>' +
-                    '<div class="email">' + (msg.email || "") + ' | ' + (msg.date || "") + '</div>' +
-                    '<div class="text">' + (msg.text || "") + '</div>' +
+                    '<h4>' + (msg.name || 'مجهول') + '</h4>' +
+                    '<div class="email">' + (msg.email || '') + ' | ' + (msg.date || '') + '</div>' +
+                    '<div class="text">' + (msg.text || '') + '</div>' +
                 '</div>'
             ).reverse().join('');
         }
@@ -124,12 +182,16 @@
                 localStorage.removeItem('admin_messages');
                 messagesList.innerHTML = '<p style="color: #666; text-align: center;">جاري المسح...</p>';
                 try {
-                    await fetch(BLOB_URL, {
+                    const putResponse = await fetch(getBlobUrl(), {
                         method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
                         body: JSON.stringify([])
                     });
-                } catch(e) {}
+                    if (!putResponse.ok) console.error('Clear PUT failed:', putResponse.status);
+                } catch(e) { console.error('Clear failed:', e); }
                 renderMessages();
             }
         });
