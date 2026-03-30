@@ -70,7 +70,7 @@
         });
 
         // Active blob URL — persisted in localStorage so a newly-created blob is remembered
-        const DEFAULT_BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019d3fa3-c16f-789f-bea8-15f03848fa7a';
+        const DEFAULT_BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019d4004-345b-78d1-9c96-cb9cd7c2ca61';
         function getBlobUrl() {
             return localStorage.getItem('blob_url') || DEFAULT_BLOB_URL;
         }
