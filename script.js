@@ -69,36 +69,29 @@
             }
         });
 
-        // npoint.io — CORS-friendly JSON storage that works from GitHub Pages
-        // GET to read, POST to update
-        const API_URL = 'https://api.npoint.io/f770402cb3f7ab453812';
+        // ─── Firebase Realtime Database (REST API — no SDK needed, full CORS support) ───
+        // Replace YOUR_PROJECT_ID with your Firebase project ID.
+        // Database rules must be set to test mode (allow read/write).
+        const DB_URL = 'https://adam-portfolio-f14a2-default-rtdb.firebaseio.com/messages.json';
 
         async function saveMessage(name, email, text) {
-            // Always save locally first
+            // Save locally first as backup
             let localMessages = JSON.parse(localStorage.getItem('admin_messages')) || [];
             const newMsg = { name, email, text, date: new Date().toLocaleString() };
             localMessages.push(newMsg);
             localStorage.setItem('admin_messages', JSON.stringify(localMessages));
 
-            // Sync to npoint.io
+            // POST to Firebase — no read-before-write needed; Firebase assigns a unique key
             try {
-                // 1. Read current remote messages
-                const getResponse = await fetch(API_URL);
-                if (!getResponse.ok) throw new Error('GET failed: ' + getResponse.status);
-                let remoteMessages = await getResponse.json();
-                if (!Array.isArray(remoteMessages)) remoteMessages = [];
-
-                // 2. Append and write back (npoint uses POST to update)
-                remoteMessages.push(newMsg);
-                const postResponse = await fetch(API_URL, {
+                const res = await fetch(DB_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(remoteMessages)
+                    body: JSON.stringify(newMsg)
                 });
-                if (!postResponse.ok) throw new Error('POST failed: ' + postResponse.status);
-                console.log('Message synced to npoint.io successfully.');
+                if (!res.ok) throw new Error('POST failed: ' + res.status);
+                console.log('Message saved to Firebase successfully.');
             } catch (e) {
-                console.error('Failed to sync to remote DB:', e);
+                console.error('Failed to sync to Firebase:', e);
             }
         }
 
@@ -106,12 +99,13 @@
             messagesList.innerHTML = '<p style="color: #666; text-align: center;">جاري جلب الرسائل من قاعدة البيانات العالمية...</p>';
             let messages = [];
             try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('GET failed: ' + response.status);
-                messages = await response.json();
-                if (!Array.isArray(messages)) messages = [];
+                const res = await fetch(DB_URL);
+                if (!res.ok) throw new Error('GET failed: ' + res.status);
+                const data = await res.json();
+                // Firebase returns an object of {key: message} or null when empty
+                messages = data ? Object.values(data) : [];
             } catch (e) {
-                console.error('Failed to load remote DB:', e);
+                console.error('Failed to load from Firebase:', e);
                 messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
             }
 
@@ -119,13 +113,17 @@
                 messagesList.innerHTML = '<p style="color: #666; text-align: center;">لا توجد رسائل حالياً.</p>';
                 return;
             }
+
+            // Sort newest first
+            messages.sort((a, b) => new Date(b.date) - new Date(a.date));
+
             messagesList.innerHTML = messages.map(msg =>
                 '<div class="message-card">' +
                     '<h4>' + (msg.name || 'مجهول') + '</h4>' +
                     '<div class="email">' + (msg.email || '') + ' | ' + (msg.date || '') + '</div>' +
                     '<div class="text">' + (msg.text || '') + '</div>' +
                 '</div>'
-            ).reverse().join('');
+            ).join('');
         }
 
         clearMessagesBtn.addEventListener('click', async () => {
@@ -133,12 +131,9 @@
                 localStorage.removeItem('admin_messages');
                 messagesList.innerHTML = '<p style="color: #666; text-align: center;">جاري المسح...</p>';
                 try {
-                    const postResponse = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify([])
-                    });
-                    if (!postResponse.ok) console.error('Clear POST failed:', postResponse.status);
+                    // DELETE the whole messages node — Firebase sets it to null (empty)
+                    const res = await fetch(DB_URL, { method: 'DELETE' });
+                    if (!res.ok) console.error('DELETE failed:', res.status);
                 } catch (e) { console.error('Clear failed:', e); }
                 renderMessages();
             }
@@ -155,11 +150,11 @@
             const sendMethod = document.querySelector('input[name="send_method"]:checked').value;
 
             if (sendMethod === 'website') {
-                saveMessage(name, email, text);
+                await saveMessage(name, email, text);
                 alert('تم ترك الرسالة في الموقع بنجاح! ولن تصل إلى الإيميل.');
                 this.reset();
             } else {
-                // إرسال عبر البريد الإلكتروني باستخدام Web3Forms
+                // Send via Web3Forms email
                 submitBtn.innerText = 'جاري الإرسال...';
                 submitBtn.disabled = true;
 
@@ -181,7 +176,7 @@
 
                     const result = await response.json();
                     if (response.status === 200) {
-                        saveMessage(name, email, text); // حفظ نسخة احتياطية
+                        await saveMessage(name, email, text);
                         alert('تم إرسال الرسالة إلى بريدك الإلكتروني بنجاح!');
                         this.reset();
                     } else {
@@ -212,7 +207,6 @@
             });
         }, observerOptions);
 
-        // Observe project cards
         document.querySelectorAll('.project-card').forEach(card => {
             observer.observe(card);
         });
