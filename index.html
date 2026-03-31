@@ -689,16 +689,19 @@
             background: rgba(4, 7, 20, 0.85);
             backdrop-filter: blur(25px);
             z-index: 2000;
-            display: none;
+            display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.4s ease;
         }
 
         .modal-overlay.active {
-            display: flex;
             opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
         }
 
         .modal-content {
@@ -1133,6 +1136,7 @@
                 <li><a href="#about">نبذة</a></li>
                 <li><a href="#projects">المشاريع</a></li>
                 <li><a href="#contact">تواصل</a></li>
+                <li><a href="#" id="messages-link">الرسائل</a></li>
             </ul>
             <div class="social-links">
                 <a href="#" class="social-link" title="LinkedIn">🔗</a>
@@ -1169,6 +1173,9 @@
 
             <div class="messages-container" id="messages-list">
                 <!-- Messages will be injected here -->
+            </div>
+            <div id="brave-notice" style="display: none; margin-top: 1rem; color: #fbbf24; font-size: 0.9rem; padding: 1rem; border: 1px dashed #fbbf24; border-radius: 10px;">
+                ⚠️ إذا لم تظهر الرسائل، يرجى إيقاف "Brave Shields" لهذا الموقع للسماح بالاتصال بقاعدة البيانات.
             </div>
             <button type="button" class="submit-btn" id="clear-messages" style="display: none; margin-top: 1.5rem; background: #ef4444;">حذف جميع الرسائل 🗑️</button>
         </div>

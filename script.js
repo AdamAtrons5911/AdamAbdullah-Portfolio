@@ -56,15 +56,18 @@
         const clearMessagesBtn = document.getElementById('clear-messages');
         const passwordError = document.getElementById('password-error');
 
-        messagesLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            messagesModal.classList.add('active');
-            passwordForm.style.display = 'flex';
-            messagesList.style.display = 'none';
-            clearMessagesBtn.style.display = 'none';
-            document.getElementById('admin-password').value = '';
-            passwordError.style.display = 'none';
-        });
+        if (messagesLink) {
+            messagesLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                messagesModal.classList.add('active');
+                passwordForm.style.display = 'flex';
+                messagesList.style.display = 'none';
+                clearMessagesBtn.style.display = 'none';
+                document.getElementById('brave-notice').style.display = 'none';
+                document.getElementById('admin-password').value = '';
+                passwordError.style.display = 'none';
+            });
+        }
 
         closeModal.addEventListener('click', () => {
             messagesModal.classList.remove('active');
@@ -126,6 +129,8 @@
                 messages = data ? Object.values(data) : [];
             } catch (e) {
                 console.error('Failed to load from Firebase:', e);
+                // Show Brave notice if error is likely a block
+                document.getElementById('brave-notice').style.display = 'block';
                 messages = JSON.parse(localStorage.getItem('admin_messages')) || [];
             }
 
