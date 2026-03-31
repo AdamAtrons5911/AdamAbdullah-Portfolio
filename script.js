@@ -213,6 +213,24 @@
             }
         });
 
+        // Back to Top Logic
+        const backToTopBtn = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
         // Intersection Observer for animations
         const observerOptions = {
             threshold: 0.1,
@@ -227,6 +245,6 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.project-card').forEach(card => {
-            observer.observe(card);
+        document.querySelectorAll('.project-card, .contact-card').forEach(el => {
+            observer.observe(el);
         });

@@ -403,91 +403,280 @@
 
         /* Contact Section */
         .contact-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contact-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 1000px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            grid-template-columns: 1fr 1.2fr;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
-        .contact-info h3 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-            color: var(--text-color);
-            font-weight: 700;
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
         }
 
-        .contact-item {
+        .contact-sidebar {
+            background: var(--primary-gradient);
+            padding: 4rem;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2.5rem;
+        }
+
+        .contact-sidebar h3 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-sidebar p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info-list {
+            list-style: none;
+        }
+
+        .contact-info-item {
             display: flex;
             align-items: center;
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
-        .contact-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--primary-gradient);
-            border-radius: 50%;
+        .contact-info-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
             font-size: 1.5rem;
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-info-item:hover .contact-info-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .contact-info-text strong {
+            display: block;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+            margin-bottom: 0.2rem;
+        }
+
+        .contact-info-text span {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .contact-main {
+            padding: 4rem;
         }
 
         .contact-form {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: none;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
         }
 
         .form-group label {
-            color: var(--text-color);
+            font-size: 0.95rem;
             font-weight: 700;
-            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            display: block;
+            color: var(--text-color);
         }
 
         .form-group input,
         .form-group textarea {
             background: var(--input-bg);
             border: 2px solid var(--border-color);
-            color: var(--text-color);
-            padding: 15px;
-            font-family: inherit;
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
             border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: var(--bg-color);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.1);
+            outline: none;
         }
 
         .submit-btn {
             background: var(--primary-gradient);
-            padding: 15px 40px;
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 15px;
             font-size: 1.1rem;
             font-weight: 800;
-            border-radius: 50px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
         }
 
         /* Footer */
         footer {
+            padding: 5rem 0 3rem;
             background: var(--section-alt-bg);
-            color: var(--text-color);
+            text-align: center;
             border-top: 1px solid var(--border-color);
         }
 
+        .footer-logo {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            list-style: none;
+        }
+
+        .footer-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover {
+            color: var(--text-color);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
         .social-link {
-            transition: all 0.3s ease;
+            width: 55px;
+            height: 55px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
         .social-link:hover {
-            transform: translateY(-5px) scale(1.1);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px) rotate(8deg);
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .copyright {
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 992px) {
+            .contact-card { grid-template-columns: 1fr; }
+            .contact-sidebar { padding: 3rem; text-align: center; }
+            .contact-info-item { justify-content: center; }
+            .form-row { grid-template-columns: 1fr; }
         }
 
         /* Modal */
@@ -641,7 +830,7 @@
 
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="assets/presentation.png" alt="Graduation Project mockup">
+                        <img src="assets/tourism_info.png" alt="Graduation Project mockup">
                     </div>
                     <div class="project-content">
                         <h3>مشروع تخرجى من اشبال مصر الرقمية</h3>
@@ -654,7 +843,7 @@
 
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="assets/presentation.png" alt="Internet Risks presentation mockup">
+                        <img src="assets/cyber_risks.png" alt="Internet Risks presentation mockup">
                     </div>
                     <div class="project-content">
                         <h3>عرض تقديمى عن مخاطر الانترنت</h3>
@@ -672,51 +861,67 @@
         <div class="container">
             <h2>تواصل معي</h2>
             <div class="contact-content">
-                <div class="contact-info">
-                    <h3>معلومات التواصل</h3>
-                    <div class="contact-item">
-                        <div class="contact-icon">📧</div>
-                        <div>
-                            <strong>البريد الإلكتروني</strong><br>
-                            adamabdala630@gmail.com
+                <div class="contact-card">
+                    <div class="contact-sidebar">
+                        <h3>لنتحدث!</h3>
+                        <p>أنا دائمًا منفتح لمناقشة المشاريع الجديدة أو الأفكار الإبداعية أو الفرص لتكون جزءًا من رؤيتك.</p>
+                        
+                        <div class="contact-info-list">
+                            <div class="contact-info-item">
+                                <div class="contact-info-icon">📧</div>
+                                <div class="contact-info-text">
+                                    <strong>البريد الإلكتروني</strong>
+                                    <span>adamabdala630@gmail.com</span>
+                                </div>
+                            </div>
+                            <div class="contact-info-item">
+                                <div class="contact-info-icon">📱</div>
+                                <div class="contact-info-text">
+                                    <strong>الهاتف</strong>
+                                    <span>01113973674</span>
+                                </div>
+                            </div>
+                            <div class="contact-info-item">
+                                <div class="contact-info-icon">📍</div>
+                                <div class="contact-info-text">
+                                    <strong>الموقع</strong>
+                                    <span>أسوان، مصر</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📱</div>
-                        <div>
-                            <strong>الهاتف</strong><br>
-                           01113973674
+
+                    <div class="contact-main">
+                        <div class="contact-form">
+                            <form id="contact-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="name">الاسم</label>
+                                        <input type="text" id="name" name="name" placeholder="أدخل اسمك..." required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">البريد الإلكتروني</label>
+                                        <input type="email" id="email" name="email" placeholder="بريدك..." required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="message">الرسالة</label>
+                                    <textarea id="message" name="message" placeholder="اكتب رسالتك هنا..." required></textarea>
+                                </div>
+                                <div class="radio-group" style="padding-bottom: 1.5rem;">
+                                    <label class="radio-option">
+                                        <input type="radio" name="send_method" value="email" checked>
+                                        إرسال عبر البريد
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="send_method" value="website">
+                                        ترك رسالة بالموقع
+                                    </label>
+                                </div>
+                                <button type="submit" class="submit-btn">إرسال الرسالة ✨</button>
+                            </form>
                         </div>
                     </div>
-                    <div class="contact-item">
-                    
-                </div>
-                <div class="contact-form">
-                    <form>
-                        <div class="form-group">
-                            <label for="name">الاسم</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">البريد الإلكتروني</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">الرسالة</label>
-                            <textarea id="message" name="message" required></textarea>
-                        </div>
-                        <div class="radio-group" style="padding-bottom: 0.5rem;">
-                            <label class="radio-option">
-                                <input type="radio" name="send_method" value="email" checked>
-                                إرسال عبر البريد الإلكتروني
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="send_method" value="website">
-                                ترك الرسالة في الموقع
-                            </label>
-                        </div>
-                        <button type="submit" class="submit-btn">إرسال الرسالة</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -724,15 +929,28 @@
 
     <footer>
         <div class="container">
+            <div class="footer-logo">ادم عبدالله</div>
+            <ul class="footer-nav">
+                <li><a href="#home">الرئيسية</a></li>
+                <li><a href="#about">نبذة</a></li>
+                <li><a href="#projects">المشاريع</a></li>
+                <li><a href="#contact">تواصل</a></li>
+            </ul>
             <div class="social-links">
-                <a href="#" class="social-link">🔗</a>
-                <a href="#" class="social-link">📧</a>
-                <a href="#" class="social-link">📱</a>
-                <a href="#" class="social-link">💼</a>
+                <a href="#" class="social-link" title="LinkedIn">🔗</a>
+                <a href="#" class="social-link" title="Email">📧</a>
+                <a href="#" class="social-link" title="WhatsApp">📱</a>
+                <a href="#" class="social-link" title="GitHub">💼</a>
             </div>
-            <p>&copy; 2025 اسمك. جميع الحقوق محفوظة.</p>
+            <div class="copyright">
+                <p>&copy; 2025 ادم عبدالله. جميع الحقوق محفوظة.</p>
+            </div>
         </div>
     </footer>
+
+    <a href="#home" class="back-to-top" id="back-to-top" title="العودة للأعلى">
+        ↑
+    </a>
 
     <!-- Messages Modal -->
     <div class="modal-overlay" id="messages-modal">
