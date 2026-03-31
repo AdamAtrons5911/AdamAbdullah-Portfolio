@@ -59,7 +59,11 @@
         if (messagesLink) {
             messagesLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                messagesModal.classList.add('active');
+                console.log('Opening Messages Box...');
+                messagesModal.style.display = 'flex';
+                setTimeout(() => {
+                    messagesModal.classList.add('active');
+                }, 10);
                 passwordForm.style.display = 'flex';
                 messagesList.style.display = 'none';
                 clearMessagesBtn.style.display = 'none';
@@ -71,11 +75,17 @@
 
         closeModal.addEventListener('click', () => {
             messagesModal.classList.remove('active');
+            setTimeout(() => {
+                messagesModal.style.display = 'none';
+            }, 400);
         });
 
         messagesModal.addEventListener('click', (e) => {
             if (e.target === messagesModal) {
                 messagesModal.classList.remove('active');
+                setTimeout(() => {
+                    messagesModal.style.display = 'none';
+                }, 400);
             }
         });
 
