@@ -679,25 +679,221 @@
             .form-row { grid-template-columns: 1fr; }
         }
 
-        /* Modal */
+        /* Messages Modal Redesign — Permanent Cyber Dark */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(4, 7, 20, 0.85);
+            backdrop-filter: blur(25px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
         .modal-content {
-            background: var(--bg-color);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
+            background: linear-gradient(145deg, #111827, #0f172a);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 30px;
+            padding: 3.5rem;
+            width: 95%;
+            max-width: 550px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 40px rgba(102, 126, 234, 0.1);
+            text-align: center;
+            position: relative;
+            transform: translateY(30px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #f3f4f6;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #9ca3af;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #ef4444;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .modal-header h2 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-header p {
+            color: #9ca3af;
+            font-size: 1rem;
+        }
+
+        #password-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .pass-input-group {
+            position: relative;
+        }
+
+        .pass-input-group input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 18px 25px;
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+            letter-spacing: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .pass-input-group input:focus {
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+
+        .messages-container {
+            max-height: 450px;
+            overflow-y: auto;
+            text-align: right;
+            margin-top: 1.5rem;
+            padding-right: 10px;
+            display: none;
+        }
+
+        .messages-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
         }
 
         .message-card {
-            background: var(--section-alt-bg);
-            border-right: 4px solid #667eea;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            padding: 1.8rem;
+            margin-bottom: 1.5rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .message-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(-5px);
+            border-color: rgba(102, 126, 234, 0.3);
         }
 
         .message-card h4 {
-            color: var(--text-color);
+            color: #667eea;
+            margin-bottom: 0.6rem;
+            font-size: 1.2rem;
+            font-weight: 700;
         }
 
-        /* Radio Buttons */
-        .radio-option {
-            color: var(--text-color);
+        .message-card .email {
+            font-size: 0.9rem;
+            color: #9ca3af;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .message-card .text {
+            color: #d1d5db;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        /* Internet Risks Visual — Security Shield Illustration */
+        .cyber-visual {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-visual::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path d="M0 0h40v40H0z" fill="none"/><path d="M0 20h40M20 0v40" stroke="rgba(102,126,234,0.1)" stroke-width="1"/></svg>');
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-40px, -40px); }
+        }
+
+        .shield-icon {
+            position: relative;
+            z-index: 2;
+            width: 100px;
+            height: 100px;
+            background: var(--primary-gradient);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.4);
+            animation: pulse 3s infinite;
+        }
+
+        .shield-icon i { font-size: 3rem; color: white; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.05); filter: brightness(1.2); }
+            100% { transform: scale(1); filter: brightness(1); }
         }
 
         @media (max-width: 768px) {
@@ -843,7 +1039,9 @@
 
                 <div class="project-card">
                     <div class="project-image">
-                        <img src="assets/cyber_risks.png" alt="Internet Risks presentation mockup">
+                        <div class="cyber-visual">
+                            <div class="shield-icon">🛡️</div>
+                        </div>
                     </div>
                     <div class="project-content">
                         <h3>عرض تقديمى عن مخاطر الانترنت</h3>
@@ -956,21 +1154,23 @@
     <div class="modal-overlay" id="messages-modal">
         <div class="modal-content">
             <span class="modal-close" id="close-modal">&times;</span>
-            <h2 style="margin-bottom: 1.5rem; color: #333;">صندوق الرسائل</h2>
+            <div class="modal-header">
+                <h2>صندوق الرسائل 🔒</h2>
+                <p>الوصول المشفر للرسائل الواردة</p>
+            </div>
             
             <div id="password-form">
-                <p style="margin-bottom: 0.5rem;">أدخل كلمة المرور للوصول إلى الرسائل</p>
-                <div class="form-group" style="margin-bottom: 0;">
-                    <input type="password" id="admin-password" placeholder="كلمة المرور...">
+                <div class="pass-input-group">
+                    <input type="password" id="admin-password" placeholder="••••••••">
                 </div>
-                <button type="button" class="submit-btn" id="verify-password">دخول</button>
-                <p id="password-error" style="color: #e74c3c; display: none; margin-top: 0;">كلمة المرور غير صحيحة</p>
+                <button type="button" class="submit-btn" id="verify-password">تأكيد الهوية 🛡️</button>
+                <p id="password-error" style="color: #ef4444; display: none; margin-top: 0.5rem; font-weight: 700;">كلمة المرور غير صحيحة!</p>
             </div>
 
             <div class="messages-container" id="messages-list">
                 <!-- Messages will be injected here -->
             </div>
-            <button type="button" class="submit-btn" id="clear-messages" style="display: none; margin-top: 1.5rem; background: #e74c3c;">مسح جميع الرسائل</button>
+            <button type="button" class="submit-btn" id="clear-messages" style="display: none; margin-top: 1.5rem; background: #ef4444;">حذف جميع الرسائل 🗑️</button>
         </div>
     </div>
 

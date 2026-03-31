@@ -58,7 +58,7 @@
 
         messagesLink.addEventListener('click', (e) => {
             e.preventDefault();
-            messagesModal.style.display = 'flex';
+            messagesModal.classList.add('active');
             passwordForm.style.display = 'flex';
             messagesList.style.display = 'none';
             clearMessagesBtn.style.display = 'none';
@@ -67,12 +67,12 @@
         });
 
         closeModal.addEventListener('click', () => {
-            messagesModal.style.display = 'none';
+            messagesModal.classList.remove('active');
         });
 
         messagesModal.addEventListener('click', (e) => {
             if (e.target === messagesModal) {
-                messagesModal.style.display = 'none';
+                messagesModal.classList.remove('active');
             }
         });
 
@@ -139,8 +139,8 @@
 
             messagesList.innerHTML = messages.map(msg =>
                 '<div class="message-card">' +
-                    '<h4>' + (msg.name || 'مجهول') + '</h4>' +
-                    '<div class="email">' + (msg.email || '') + ' | ' + (msg.date || '') + '</div>' +
+                    '<h4>' + (msg.name || 'مجهول') + ' ✨</h4>' +
+                    '<div class="email"><span>📧</span> ' + (msg.email || '') + ' | <span>📅</span> ' + (msg.date || '') + '</div>' +
                     '<div class="text">' + (msg.text || '') + '</div>' +
                 '</div>'
             ).join('');
