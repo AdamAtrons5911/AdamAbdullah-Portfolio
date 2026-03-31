@@ -3,19 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بورتفوليو -ادم </title>
+    <title>بورتفوليو - ادم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-color: #ffd700;
+            --text-color: #333;
+            --text-muted: #666;
+            --bg-color: #ffffff;
+            --section-bg: #ffffff;
+            --section-alt-bg: #f8f9fa;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --nav-bg: rgba(255, 255, 255, 0.1);
+            --header-scroll: rgba(255, 255, 255, 0.95);
+            --border-color: #e0e0e0;
+            --input-bg: #ffffff;
+            --hero-text: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --primary-gradient: linear-gradient(135deg, #4338ca 0%, #1e1b4b 100%);
+            --accent-color: #facc15;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --bg-color: #0f172a;
+            --section-bg: #0f172a;
+            --section-alt-bg: #1e293b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --nav-bg: rgba(15, 23, 42, 0.1);
+            --header-scroll: rgba(15, 23, 42, 0.95);
+            --border-color: #334155;
+            --input-bg: #1e293b;
+            --hero-text: #f3f4f6;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Cairo', sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-color);
+            background: var(--bg-color);
             min-height: 100vh;
         }
 
@@ -25,9 +61,36 @@
             padding: 0 20px;
         }
 
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: 2px solid white;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            margin-right: 1rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
         /* Header */
         header {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--nav-bg);
             backdrop-filter: blur(10px);
             position: fixed;
             top: 0;
@@ -35,6 +98,18 @@
             z-index: 1000;
             padding: 1rem 0;
             transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            background: var(--header-scroll);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header.scrolled .logo, 
+        header.scrolled .nav-links a,
+        header.scrolled .theme-toggle {
+            color: var(--text-color);
+            border-color: var(--text-color);
         }
 
         nav {
@@ -45,26 +120,28 @@
 
         .logo {
             font-size: 1.8rem;
-            font-weight: bold;
+            font-weight: 800;
             color: white;
             text-decoration: none;
+            letter-spacing: -1px;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
             transition: color 0.3s ease;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .nav-links a:hover {
-            color: #ffd700;
+            color: var(--accent-color);
         }
 
         /* Hero Section */
@@ -74,9 +151,18 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            color: white;
+            color: var(--hero-text);
             position: relative;
             overflow: hidden;
+            background: var(--primary-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .hero::before {
@@ -86,8 +172,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
-            opacity: 0.3;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
         }
 
         .hero-content {
@@ -96,101 +181,105 @@
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
             animation: fadeInUp 1s ease;
+            font-weight: 900;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
             animation: fadeInUp 1s ease 0.3s both;
+            opacity: 0.9;
         }
 
         .cta-button {
             display: inline-block;
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            background: var(--accent-color);
             color: #333;
-            padding: 15px 30px;
+            padding: 18px 40px;
             text-decoration: none;
             border-radius: 50px;
-            font-weight: bold;
-            transition: transform 0.3s ease;
+            font-weight: 800;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             animation: fadeInUp 1s ease 0.6s both;
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2);
         }
 
         .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.4);
         }
 
         /* Sections */
         .section {
-            padding: 80px 0;
-            background: white;
+            padding: 100px 0;
+            background: var(--section-bg);
         }
 
         .section:nth-child(even) {
-            background: #f8f9fa;
+            background: var(--section-alt-bg);
         }
 
         .section h2 {
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #333;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            color: var(--text-color);
             position: relative;
+            font-weight: 800;
         }
 
         .section h2::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 100px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--primary-gradient);
         }
 
         /* About Section */
         .about-content {
             display: grid;
             grid-template-columns: 1fr 2fr;
-            gap: 3rem;
+            gap: 4rem;
             align-items: center;
-        }
-
-        .about-image {
-            text-align: center;
         }
 
         .profile-img {
-            width: 250px;
-            height: 250px;
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
-            border: 5px solid #667eea;
+            border: 8px solid var(--primary-gradient);
             object-fit: cover;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: var(--primary-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
+            font-size: 4rem;
             color: white;
             margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
         }
 
         .about-text h3 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #333;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            font-weight: 700;
         }
 
         .about-text p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-            color: #666;
+            font-size: 1.15rem;
+            line-height: 1.9;
+            margin-bottom: 2rem;
+            color: var(--text-muted);
         }
 
         .skills {
@@ -200,358 +289,233 @@
         }
 
         .skill-tag {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: var(--primary-gradient);
             color: white;
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-3px);
         }
 
         /* Projects Section */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
         }
 
         .project-card {
-            background: white;
-            border-radius: 15px;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         .project-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
         }
 
         .project-image {
-            height: 200px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 220px;
+            background: var(--primary-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 3rem;
+            font-size: 4rem;
             position: relative;
             overflow: hidden;
         }
 
-        .project-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .project-image img {
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/><circle cx="50" cy="50" r="20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
-            opacity: 0.3;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.1);
         }
 
         .project-content {
-            padding: 2rem;
+            padding: 2.5rem;
         }
 
         .project-content h3 {
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             margin-bottom: 1rem;
-            color: #333;
+            color: var(--text-color);
+            font-weight: 700;
         }
 
         .project-content p {
-            color: #666;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            font-size: 1rem;
         }
 
         .project-links {
             display: flex;
-            gap: 1rem;
+            gap: 1.2rem;
         }
 
         .project-link {
-            padding: 8px 16px;
+            padding: 10px 22px;
             text-decoration: none;
-            border-radius: 25px;
-            font-weight: 500;
+            border-radius: 30px;
+            font-weight: 700;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            font-size: 0.95rem;
         }
 
         .project-link.primary {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: var(--primary-gradient);
             color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .project-link.secondary {
-            border-color: #667eea;
+            border: 2px solid #667eea;
             color: #667eea;
         }
 
+        [data-theme="dark"] .project-link.secondary {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
         .project-link:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         /* Contact Section */
         .contact-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            gap: 4rem;
         }
 
         .contact-info h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: #333;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            font-weight: 700;
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .contact-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
         }
 
         .contact-form {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: #333;
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 1.1rem;
         }
 
         .form-group input,
         .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
+            background: var(--input-bg);
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+            padding: 15px;
+            font-family: inherit;
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
-            outline: none;
             border-color: #667eea;
-        }
-
-        .form-group textarea {
-            height: 120px;
-            resize: vertical;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
 
         .submit-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            width: 100%;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
+            background: var(--primary-gradient);
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
         /* Footer */
         footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            background: var(--section-alt-bg);
+            color: var(--text-color);
+            border-top: 1px solid var(--border-color);
         }
 
         .social-link {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .social-link:hover {
-            transform: scale(1.1);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Radio Buttons */
-        .radio-group {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .radio-option {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-
-        .radio-option input[type="radio"] {
-            accent-color: #667eea;
-            width: 1.2rem;
-            height: 1.2rem;
-        }
-
-        /* Modal / Messages Section */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
+        /* Modal */
         .modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-            text-align: center;
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #333;
-            transition: color 0.3s;
-        }
-
-        .modal-close:hover {
-            color: #e74c3c;
-        }
-
-        .messages-container {
-            max-height: 400px;
-            overflow-y: auto;
-            text-align: right;
-            margin-top: 1rem;
-            display: none;
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
         }
 
         .message-card {
-            background: #f8f9fa;
+            background: var(--section-alt-bg);
             border-right: 4px solid #667eea;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-            text-align: right;
         }
 
         .message-card h4 {
-            color: #333;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+            color: var(--text-color);
         }
 
-        .message-card .email {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 0.5rem;
+        /* Radio Buttons */
+        .radio-option {
+            color: var(--text-color);
         }
 
-        .message-card .text {
-            color: #444;
-        }
-
-        #password-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .about-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-
-            .contact-content {
-                grid-template-columns: 1fr;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
+            .hero h1 { font-size: 3rem; }
+            .about-content, .contact-content { grid-template-columns: 1fr; }
+            .profile-img { width: 200px; height: 200px; }
+            .section h2 { font-size: 2.2rem; }
         }
     </style>
 </head>
@@ -565,6 +529,11 @@
                 <li><a href="#projects">المشاريع</a></li>
                 <li><a href="#contact">تواصل</a></li>
                 <li><a href="#" id="messages-link">الرسائل 🔒</a></li>
+                <li>
+                    <button class="theme-toggle" id="theme-toggle" title="تبديل الوضع الليلي">
+                        🌙
+                    </button>
+                </li>
             </ul>
         </nav>
     </header>
@@ -618,7 +587,9 @@
             <h2>مشاريعي</h2>
             <div class="projects-grid">
                 <div class="project-card">
-                    <div class="project-image">✈️</div>
+                    <div class="project-image">
+                        <img src="assets/tourist_plan.png" alt="Tourst's Plan mockup">
+                    </div>
                     <div class="project-content">
                         <h3>tourst's plan</h3>
                         <p>هو مشروع لمساعدة السياح فى مصر او بالخارج يعرفهم اسعار تذاكر المناطق السياحية و يمكنهم حجز رحلات الطيران و حجز الفنادق و معرفة اسعار المنتجات الغذائية ليحميهم من الاحتيال.</p>
@@ -629,7 +600,9 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-image">🐤</div>
+                    <div class="project-image">
+                        <img src="assets/flappy_bird.png" alt="Flappy Bird History mockup">
+                    </div>
                     <div class="project-content">
                         <h3>لعبة flappy bird (معدلة)</h3>
                         <p>لعبة مستوحاة من Flappy Bird، لكن بفكرة مبتكرة وهي السفر عبر الزمن! يتحكم اللاعب بطائر يقفز بين الأنابيب، وكلما تقدم أكثر، ينتقل إلى عصر جديد (مستقبلي أو تاريخي) مع تغيّرات في الخلفية أو السرعة. الهدف هو تجاوز العقبات لأطول مسافة ممكنة دون الاصطدام، مع تجربة ممتعة تتغير مع الزمن.</p>
@@ -640,7 +613,9 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-image">🎨</div>
+                    <div class="project-image">
+                        <img src="assets/graphic_design.png" alt="Graphic Design portfolio">
+                    </div>
                     <div class="project-content">
                         <h3>(موقع) Graphic Designs </h3>
                         <p>تصميمات و شعارات مختلفة.</p>
@@ -652,7 +627,9 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-image">✈️</div>
+                    <div class="project-image">
+                        <img src="assets/presentation.png" alt="Presentation mockup">
+                    </div>
                     <div class="project-content">
                         <h3>العرض التقديمي ل(tourist's plan) </h3>
                         <p>العرض التقديمى للمشروع من الناحية المالية و هو عرض تقديمى تابع للمعسكر الصيفى فى مبادرة اشبال مصر الرقمية.</p>
@@ -663,7 +640,9 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-image">🧭</div>
+                    <div class="project-image">
+                        <img src="assets/presentation.png" alt="Graduation Project mockup">
+                    </div>
                     <div class="project-content">
                         <h3>مشروع تخرجى من اشبال مصر الرقمية</h3>
                         <p>هو عرض تقديمى عن بعض الامامن اسياحية فى مصر و معلومات عنها قد تكون مفيدة للسياح .</p>
@@ -674,7 +653,9 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-image">🌐</div>
+                    <div class="project-image">
+                        <img src="assets/presentation.png" alt="Internet Risks presentation mockup">
+                    </div>
                     <div class="project-content">
                         <h3>عرض تقديمى عن مخاطر الانترنت</h3>
                         <p>هو عرض تقديمى لندوة عن كيفية حماية نفسك من مخاطر الانترنت</p>
