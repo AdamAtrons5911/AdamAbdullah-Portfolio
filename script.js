@@ -97,7 +97,7 @@
 
         verifyPasswordBtn.addEventListener('click', () => {
             const pwd = document.getElementById('admin-password').value;
-            if (pwd === '5911adam') {
+            if (pwd === 'adam5911') {
                 passwordForm.style.display = 'none';
                 messagesList.style.display = 'block';
                 clearMessagesBtn.style.display = 'block';
