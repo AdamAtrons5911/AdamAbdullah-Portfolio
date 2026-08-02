@@ -49,6 +49,7 @@
         // Messages Modal Logic
         const messagesModal = document.getElementById('messages-modal');
         const messagesLink = document.getElementById('messages-link');
+        const messagesLinkFooter = document.getElementById('messages-link-footer');
         const closeModal = document.getElementById('close-modal');
         const passwordForm = document.getElementById('password-form');
         const messagesList = document.getElementById('messages-list');
@@ -56,21 +57,26 @@
         const clearMessagesBtn = document.getElementById('clear-messages');
         const passwordError = document.getElementById('password-error');
 
+        const openMessagesBox = (e) => {
+            if (e) e.preventDefault();
+            console.log('Opening Messages Box...');
+            messagesModal.style.display = 'flex';
+            setTimeout(() => {
+                messagesModal.classList.add('active');
+            }, 10);
+            passwordForm.style.display = 'flex';
+            messagesList.style.display = 'none';
+            clearMessagesBtn.style.display = 'none';
+            document.getElementById('brave-notice').style.display = 'none';
+            document.getElementById('admin-password').value = '';
+            passwordError.style.display = 'none';
+        };
+
         if (messagesLink) {
-            messagesLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                console.log('Opening Messages Box...');
-                messagesModal.style.display = 'flex';
-                setTimeout(() => {
-                    messagesModal.classList.add('active');
-                }, 10);
-                passwordForm.style.display = 'flex';
-                messagesList.style.display = 'none';
-                clearMessagesBtn.style.display = 'none';
-                document.getElementById('brave-notice').style.display = 'none';
-                document.getElementById('admin-password').value = '';
-                passwordError.style.display = 'none';
-            });
+            messagesLink.addEventListener('click', openMessagesBox);
+        }
+        if (messagesLinkFooter) {
+            messagesLinkFooter.addEventListener('click', openMessagesBox);
         }
 
         closeModal.addEventListener('click', () => {
